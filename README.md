@@ -21,6 +21,18 @@ npm start
 `npm run dev` starts `server.ts`, a custom Next.js server that also hosts the Socket.IO room
 engine. Rooms live in memory in that process — a restart clears them.
 
+## Deploy on Railway
+
+The app needs one always-on Node process (Socket.IO + in-memory rooms), so it runs on
+Railway/Render/Fly rather than serverless hosts. A `Dockerfile` and `railway.json` are included.
+
+1. [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub repo** → pick this repo.
+2. Railway detects the `Dockerfile` and builds it; no build/start command needed.
+3. **Settings → Networking → Generate Domain** to get a public URL.
+4. Keep **1 replica** (rooms live in memory; multiple replicas would split players across instances).
+
+Every push to `main` redeploys.
+
 ## How it works
 
 | Layer | Where | Notes |

@@ -2,7 +2,7 @@
  * Runs every reference solution against its dataset and reports questions that
  * error, return no rows, or have duplicate ids. Run with `npm run test:questions`.
  */
-import { allQuestions, getExpectedOutput, questionCounts } from "../lib/questions";
+import { allQuestions, getExpectedOutput, mockQuestions, questionCounts } from "../lib/questions";
 import { guardQuery } from "../lib/sql-runner/guard";
 import { runQuery } from "../lib/sql-runner/sandbox";
 import { compareResults } from "../lib/validation/compare";
@@ -11,7 +11,7 @@ async function main() {
   const seen = new Set<string>();
   let failures = 0;
 
-  for (const q of allQuestions) {
+  for (const q of [...allQuestions, ...mockQuestions]) {
     if (seen.has(q.id)) {
       console.error(`✗ ${q.id} duplicate id`);
       failures++;
@@ -55,7 +55,7 @@ async function main() {
   }
 
   console.log(
-    `\n${allQuestions.length} questions (easy ${questionCounts.easy}, medium ${questionCounts.medium}, hard ${questionCounts.hard}), ${failures} failure(s)`,
+    `\n${allQuestions.length} pool questions (easy ${questionCounts.easy}, medium ${questionCounts.medium}, hard ${questionCounts.hard}) + ${mockQuestions.length} mock-test questions, ${failures} failure(s)`,
   );
   process.exit(failures ? 1 : 0);
 }

@@ -1,4 +1,5 @@
 import { company } from "./company";
+import { consulting } from "./consulting";
 import { ecommerce } from "./ecommerce";
 import { university } from "./university";
 import type { Dataset } from "./types";
@@ -9,6 +10,7 @@ export const datasets: Record<string, Dataset> = {
   [company.id]: company,
   [ecommerce.id]: ecommerce,
   [university.id]: university,
+  [consulting.id]: consulting,
 };
 
 export function getDataset(id: string): Dataset | undefined {

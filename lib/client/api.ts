@@ -73,3 +73,45 @@ export function fetchPracticeHint(questionId: string, index: number): Promise<{ 
 export function fetchSolution(questionId: string): Promise<{ solution: string }> {
   return post("/api/practice/solution", { questionId });
 }
+
+import type { MockTestPayload } from "@/lib/mock-tests";
+import type { CodingTestCase } from "@/lib/mock-tests/types";
+
+export type { MockTestPayload };
+
+export async function fetchMockTest(id: string): Promise<MockTestPayload> {
+  const res = await fetch(`/api/mock/${id}`);
+  const data = (await res.json()) as MockTestPayload & { error?: string };
+  if (!res.ok) throw new Error(data.error ?? "Could not load the mock test.");
+  return data;
+}
+
+export function submitMockSql(input: {
+  questionId: string;
+  sql: string;
+  hintsUsed: number;
+}): Promise<PracticeSubmitResponse> {
+  return post<PracticeSubmitResponse>("/api/mock/submit", input);
+}
+
+export interface McqResult {
+  correct: boolean;
+  correctIndex: number;
+  explanation: string;
+  points: number;
+}
+
+export function submitMcq(questionId: string, answerIndex: number): Promise<McqResult> {
+  return post<McqResult>("/api/mock/mcq", { questionId, answerIndex });
+}
+
+export function fetchCodingCases(questionId: string): Promise<{ testCases: CodingTestCase[] }> {
+  return post("/api/mock/coding", { questionId });
+}
+
+export function revealAnswer(
+  questionId: string,
+  kind: "mcq" | "sql" | "coding",
+): Promise<{ solution?: string; explanation?: string; correctIndex?: number }> {
+  return post("/api/mock/reveal", { questionId, kind });
+}

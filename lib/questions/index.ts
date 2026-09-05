@@ -1,15 +1,24 @@
 import { easyQuestions } from "./easy";
 import { mediumQuestions } from "./medium";
 import { hardQuestions } from "./hard";
+import { accentureQuestions } from "./accenture";
 import type { Difficulty, ExpectedOutput, PublicQuestion, QuestionDef } from "./types";
 import { execTrusted, getDatabase } from "@/lib/sql-runner/sandbox";
 import { BASE_POINTS } from "@/lib/scoring/scoring";
 
 export type { Difficulty, RoomDifficulty, ExpectedOutput, PublicQuestion, QuestionDef, Tag } from "./types";
 
+/** The pool practice sessions and battles draw from. */
 export const allQuestions: QuestionDef[] = [...easyQuestions, ...mediumQuestions, ...hardQuestions];
 
-const byId = new Map(allQuestions.map((q) => [q.id, q]));
+/**
+ * Mock-test questions are looked up by id like any other question, but are
+ * deliberately kept out of `allQuestions` so they stay reserved for their
+ * mock test instead of turning up in practice or a battle.
+ */
+export const mockQuestions: QuestionDef[] = [...accentureQuestions];
+
+const byId = new Map([...allQuestions, ...mockQuestions].map((q) => [q.id, q]));
 
 export function getQuestion(id: string): QuestionDef | undefined {
   return byId.get(id);

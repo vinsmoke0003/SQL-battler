@@ -8,6 +8,7 @@ import { Toaster } from "@/components/toast/Toaster";
 
 const links = [
   { href: "/practice", label: "Practice" },
+  { href: "/mock", label: "Mock Tests" },
   { href: "/create", label: "Create Battle" },
   { href: "/join", label: "Join Battle" },
 ];
@@ -15,7 +16,7 @@ const links = [
 export function SiteHeader() {
   const pathname = usePathname();
   // The battle screen has its own compact top bar.
-  const inBattle = pathname?.startsWith("/battle/");
+  const inBattle = pathname?.startsWith("/battle/") || /^\/mock\/[^/]+$/.test(pathname ?? "");
 
   return (
     <>

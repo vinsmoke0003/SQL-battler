@@ -57,6 +57,8 @@ export interface BattleWorkspaceProps {
   sidebar?: ReactNode;
   emptyState?: ReactNode;
   disabled?: boolean;
+  /** Seeds the editor when a question is (re)opened, e.g. revisiting one in a mock test. */
+  initialSql?: string;
 }
 
 const STARTER = "-- Write your query here\nSELECT \n";
@@ -76,6 +78,7 @@ export function BattleWorkspace({
   sidebar,
   emptyState,
   disabled,
+  initialSql,
 }: BattleWorkspaceProps) {
   const [sql, setSql] = useState(STARTER);
   const [result, setResult] = useState<QueryResult | null>(null);
@@ -94,7 +97,7 @@ export function BattleWorkspace({
 
   // Fresh slate for every new question.
   useEffect(() => {
-    setSql(STARTER);
+    setSql(initialSql ?? STARTER);
     setResult(null);
     setRunError(null);
     setVerdict(null);
@@ -104,6 +107,8 @@ export function BattleWorkspace({
     shownAt.current = Date.now();
     setElapsed(0);
     if (advanceTimer.current) clearTimeout(advanceTimer.current);
+    // initialSql is intentionally read only when the question changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [question?.id]);
 
   useEffect(() => {
